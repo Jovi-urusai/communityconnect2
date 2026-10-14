@@ -1,11 +1,22 @@
-<?php $currentPage = basename($_SERVER['SCRIPT_NAME']); ?>
-<aside class="public-sidebar">
-    <nav class="public-nav" id="publicNav">
-        <a href="index.php" class="<?= $currentPage === 'index.php' ? 'active' : '' ?>"><?php icon('home'); ?> Home</a>
-        <a href="category.php" class="<?= $currentPage === 'category.php' ? 'active' : '' ?>"><?php icon('layout-grid'); ?> Browse by Category</a>
-        <a href="community_feed.php" class="<?= $currentPage === 'community_feed.php' || $currentPage === 'community_post_create.php' ? 'active' : '' ?>"><?php icon('messages-square'); ?> Community Feed</a>
-        <a href="lost_found.php" class="<?= $currentPage === 'lost_found.php' ? 'active' : '' ?>"><?php icon('package-search'); ?> Lost Item</a>
-        <a href="resolved_reports.php" class="<?= $currentPage === 'resolved_reports.php' ? 'active' : '' ?>"><?php icon('circle-check-big'); ?> Resolved Reports</a>
-        <a href="track_request.php" class="<?= $currentPage === 'track_request.php' ? 'active' : '' ?>"><?php icon('search'); ?> Track My Request</a>
+<?php
+$currentPage = basename($_SERVER['SCRIPT_NAME']);
+$navItems = [
+    ['index.php', 'home', 'Home', ['index.php']],
+    ['category.php', 'layout-grid', 'Browse by Category', ['category.php']],
+    ['community_feed.php', 'messages-square', 'Community Feed', ['community_feed.php', 'community_post_create.php']],
+    ['lost_found.php', 'package-search', 'Lost Item', ['lost_found.php']],
+    ['resolved_reports.php', 'circle-check-big', 'Resolved Reports', ['resolved_reports.php']],
+    ['track_request.php', 'search', 'Track My Request', ['track_request.php']],
+];
+$navActiveClass = 'flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-bold whitespace-nowrap bg-amber-500/20 text-amber-400 border-l-4 border-amber-500 shadow-lg shadow-amber-500/10';
+$navInactiveClass = 'flex items-center gap-2.5 px-3.5 py-2.5 rounded-lg text-sm font-semibold whitespace-nowrap text-[var(--text-muted)] border-l-4 border-transparent hover:bg-[var(--surface-hover)] hover:text-[var(--text)] transition-colors';
+?>
+<aside class="w-full lg:w-[220px] shrink-0 lg:sticky lg:top-[65px] self-start p-4 bg-[var(--surface-strong)] backdrop-blur-md border-b lg:border-b-0 lg:border-r border-[var(--border)]">
+    <nav class="flex flex-row lg:flex-col gap-1 overflow-x-auto lg:overflow-visible" id="publicNav">
+        <?php foreach ($navItems as [$href, $iconName, $label, $matchPages]): ?>
+            <a href="<?= e($href) ?>" class="<?= in_array($currentPage, $matchPages, true) ? $navActiveClass : $navInactiveClass ?>">
+                <?php icon($iconName); ?> <?= e($label) ?>
+            </a>
+        <?php endforeach; ?>
     </nav>
 </aside>

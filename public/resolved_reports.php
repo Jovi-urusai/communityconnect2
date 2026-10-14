@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/../config/auth.php';
+require_once __DIR__ . '/../config/resident_auth.php';
+require_resident_login();
 
 $loginError = $_SESSION['login_error'] ?? null;
 unset($_SESSION['login_error']);
@@ -33,22 +35,22 @@ if ($reports) {
     <title>Resolved Reports — CommunityConnect</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body class="resident-theme min-h-screen">
 
 <?php include __DIR__ . '/includes/header.php'; ?>
 
-<div class="public-shell">
+<div class="flex flex-col lg:flex-row items-start gap-0 max-w-[1180px] mx-auto">
     <?php include __DIR__ . '/includes/sidebar.php'; ?>
-    <main class="public-content">
+    <main class="flex-1 min-w-0 px-5 pt-5 pb-5">
         <?php include __DIR__ . '/includes/urgent_banner.php'; ?>
 
-        <h1 style="margin-bottom: 4px;">Resolved Reports</h1>
-        <p style="color: var(--text-muted); margin-top:0;">Problems reported by residents that the barangay has already addressed and fixed.</p>
+        <h1 class="mb-1 text-2xl font-bold text-[var(--text)]">Resolved Reports</h1>
+        <p class="mt-0 mb-4 text-sm text-[var(--text-muted)]">Problems reported by residents that the barangay has already addressed and fixed.</p>
 
         <?php if (!$reports): ?>
             <div class="empty-state">No resolved reports yet.</div>
         <?php else: ?>
-            <div class="gallery-grid">
+            <div class="grid gap-4" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));">
                 <?php foreach ($reports as $r): ?>
                     <?php
                         $photos = $reportPhotos[$r['id']] ?? [];
@@ -56,17 +58,17 @@ if ($reports) {
                         $extraPhotos = array_slice($photos, 1);
                         $itemAfterPhotos = $afterPhotos[$r['id']] ?? [];
                     ?>
-                    <div class="gallery-card">
+                    <div class="bg-[var(--surface)] backdrop-blur-md border border-[var(--border)] hover:border-amber-500/40 transition-all rounded-2xl shadow-xl overflow-hidden">
                         <?php if ($coverPhoto): ?>
-                            <button type="button" class="gallery-photo-trigger" data-lightbox-src="<?= e($coverPhoto) ?>" data-lightbox-alt="<?= e($r['description']) ?>">
-                                <img src="<?= e($coverPhoto) ?>" alt="<?= e($r['description']) ?>">
+                            <button type="button" class="gallery-photo-trigger block w-full p-0 border-0 bg-none cursor-pointer" data-lightbox-src="<?= e($coverPhoto) ?>" data-lightbox-alt="<?= e($r['description']) ?>">
+                                <img src="<?= e($coverPhoto) ?>" alt="<?= e($r['description']) ?>" class="w-full aspect-video object-cover">
                             </button>
                         <?php else: ?>
-                            <div class="gallery-card-placeholder">No Photo</div>
+                            <div class="w-full aspect-video flex items-center justify-center bg-[var(--bg)] text-[var(--text-faint)] text-sm font-semibold">No Photo</div>
                         <?php endif; ?>
-                        <div class="gallery-card-body">
-                            <span class="status-pill <?= status_slug($r['status']) ?>"><?php icon('circle-check-big'); ?> Fixed</span>
-                            <h4><?= e($r['description']) ?></h4>
+                        <div class="p-5 flex flex-col gap-1.5">
+                            <span class="self-start inline-flex items-center gap-1 bg-[var(--surface)] text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full text-xs font-semibold"><?php icon('circle-check-big'); ?> Fixed</span>
+                            <h4 class="m-0 text-[15px] font-bold text-[var(--text)]"><?= e($r['description']) ?></h4>
                             <div class="card-meta">
                                 <span><?php icon('map-pin'); ?> <?= e($r['location']) ?></span>
                                 <span><?php icon('calendar'); ?> Resolved <?= date('M j, Y', strtotime($r['resolved_at'] ?? $r['created_at'])) ?></span>

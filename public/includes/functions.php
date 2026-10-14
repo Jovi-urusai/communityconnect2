@@ -112,20 +112,21 @@ function render_card(array $a): void
 {
     $fromPage = basename($_SERVER['SCRIPT_NAME']);
     ?>
-    <a class="card" data-card href="announcement.php?id=<?= (int)$a['id'] ?>&amp;from=<?= e($fromPage) ?>"
+    <a class="group flex flex-col gap-2 bg-[var(--surface)] backdrop-blur-md border border-[var(--border)] hover:border-amber-500/40 transition-all rounded-2xl shadow-xl p-6 no-underline text-inherit cursor-pointer"
+         data-card href="announcement.php?id=<?= (int)$a['id'] ?>&amp;from=<?= e($fromPage) ?>"
          data-category="<?= e($a['category']) ?>"
          data-title="<?= e($a['title']) ?>"
          data-content="<?= e($a['short_description'] . ' ' . $a['content']) ?>">
         <?php $coverPhoto = $a['cover_photo'] ?? $a['image_path'] ?? null; ?>
         <?php if (!empty($coverPhoto)): ?>
-            <img class="card-image" src="<?= e($coverPhoto) ?>" alt="<?= e($a['title']) ?>">
+            <img class="w-[calc(100%+48px)] -mx-6 -mt-6 mb-0 aspect-video object-cover rounded-t-2xl" src="<?= e($coverPhoto) ?>" alt="<?= e($a['title']) ?>">
         <?php endif; ?>
-        <?php render_category_tag($a['category']); ?>
-        <h4><?= e($a['title']) ?></h4>
-        <p class="desc"><?= e($a['short_description']) ?></p>
-        <div class="card-meta">
+        <span class="self-start inline-block bg-[var(--surface-hover)] text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full text-xs font-semibold"><?= e($a['category']) ?></span>
+        <h4 class="m-0 text-[15.5px] font-bold text-[var(--text)]"><?= e($a['title']) ?></h4>
+        <p class="desc m-0 text-[13.5px] text-[var(--text-muted)] flex-1"><?= e($a['short_description']) ?></p>
+        <div class="flex items-center justify-between text-xs text-[var(--text-faint)] mt-1 pt-2 border-t border-[var(--border)]">
             <span><?= e($a['desk_name']) ?> &middot; <?= time_ago($a['created_at']) ?></span>
-            <span class="views"><?php icon('eye'); ?> <?= (int)$a['views'] ?></span>
+            <span class="views inline-flex items-center gap-1"><?php icon('eye'); ?> <?= (int)$a['views'] ?></span>
         </div>
     </a>
     <?php

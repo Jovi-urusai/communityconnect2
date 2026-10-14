@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/../config/auth.php';
+require_once __DIR__ . '/../config/resident_auth.php';
+require_resident_login();
 
 $loginError = $_SESSION['login_error'] ?? null;
 unset($_SESSION['login_error']);
@@ -40,23 +42,23 @@ if ($searched) {
     <title>Track My Request — CommunityConnect</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body class="resident-theme min-h-screen">
 
 <?php include __DIR__ . '/includes/header.php'; ?>
 
-<div class="public-shell">
+<div class="flex flex-col lg:flex-row items-start gap-0 max-w-[1180px] mx-auto">
     <?php include __DIR__ . '/includes/sidebar.php'; ?>
-    <main class="public-content" style="max-width: 640px;">
-        <p><a href="index.php">&larr; Back to announcements</a></p>
-        <h1 style="margin-bottom: 4px;">Track My Request</h1>
-        <p style="color: var(--text-muted); margin-top:0;">Enter your reference number or full name to check the status of your document request or problem report.</p>
+    <main class="flex-1 min-w-0 px-5 pt-5 pb-5" style="max-width: 640px;">
+        <p><a href="index.php" class="text-amber-400 hover:text-amber-300">&larr; Back to announcements</a></p>
+        <h1 class="mb-1 text-2xl font-bold text-[var(--text)]">Track My Request</h1>
+        <p class="mt-0 mb-4 text-sm text-[var(--text-muted)]">Enter your reference number or full name to check the status of your document request or problem report.</p>
 
-        <form method="get" class="panel" style="padding: 20px; display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
+        <form method="get" class="flex gap-2.5 items-end flex-wrap bg-[var(--surface)] backdrop-blur-md border border-[var(--border)] rounded-2xl shadow-xl p-6">
             <div class="field" style="flex:1; min-width:220px; margin-bottom:0;">
                 <label for="query">Reference Number or Full Name</label>
                 <input type="text" id="query" name="query" placeholder="e.g. DR-9F3A2B7C, PR-1A2B3C4D, or Juan Dela Cruz" value="<?= e($query) ?>" required>
             </div>
-            <button type="submit" class="btn btn-primary">Search</button>
+            <button type="submit" class="inline-flex items-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl shadow-md transition-all">Search</button>
         </form>
 
         <?php if ($searched): ?>
@@ -69,13 +71,13 @@ if ($searched) {
                         $statusSteps = $isProblem ? PROBLEM_REPORT_STATUSES : DOCUMENT_REQUEST_STATUSES;
                         $currentStepIndex = array_search($r['status'], $statusSteps, true);
                     ?>
-                    <div class="panel" style="padding: 20px; margin-top: 16px;">
-                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:8px;">
+                    <div class="bg-[var(--surface)] backdrop-blur-md border border-[var(--border)] hover:border-amber-500/40 transition-all rounded-2xl shadow-xl p-6 mt-4">
+                        <div class="flex justify-between items-start flex-wrap gap-2">
                             <div>
-                                <p style="margin:0 0 2px; font-size:12px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.04em;"><?= $isProblem ? 'Problem Report' : 'Document Request' ?> Reference Number</p>
-                                <p style="margin:0; font-family: 'Courier New', monospace; font-size:18px; font-weight:800; color:var(--accent);"><?= e($r['reference_number']) ?></p>
+                                <p class="m-0 mb-0.5 text-xs text-[var(--text-muted)] font-semibold uppercase tracking-wide"><?= $isProblem ? 'Problem Report' : 'Document Request' ?> Reference Number</p>
+                                <p class="m-0 font-mono text-lg font-extrabold text-amber-400"><?= e($r['reference_number']) ?></p>
                             </div>
-                            <span class="status-pill <?= status_slug($r['status']) ?>" style="font-size:13px;"><?= e($r['status']) ?></span>
+                            <span class="inline-block bg-[var(--surface)] text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full text-xs font-semibold"><?= e($r['status']) ?></span>
                         </div>
 
                         <div class="status-tracker">

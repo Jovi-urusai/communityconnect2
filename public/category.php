@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/includes/functions.php';
 require_once __DIR__ . '/../config/auth.php';
+require_once __DIR__ . '/../config/resident_auth.php';
+require_resident_login();
 
 $loginError = $_SESSION['login_error'] ?? null;
 unset($_SESSION['login_error']);
@@ -20,22 +22,22 @@ $announcements = $pdo->query(
     <title>Browse by Category — CommunityConnect</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body class="resident-theme min-h-screen">
 
 <?php include __DIR__ . '/includes/header.php'; ?>
 
-<div class="public-shell">
+<div class="flex flex-col lg:flex-row items-start gap-0 max-w-[1180px] mx-auto">
     <?php include __DIR__ . '/includes/sidebar.php'; ?>
-    <main class="public-content">
+    <main class="flex-1 min-w-0 px-5 pt-5 pb-5">
         <?php include __DIR__ . '/includes/urgent_banner.php'; ?>
         <?php include __DIR__ . '/includes/toolbar.php'; ?>
 
-        <section class="section">
-            <h2 class="section-title">All Announcements</h2>
+        <section class="mb-6">
+            <h2 class="text-lg font-bold text-[var(--text)] mb-3.5">All Announcements</h2>
             <div id="emptyState" class="empty-state" style="display:none;">
                 <p>No announcements match your search or filter.</p>
             </div>
-            <div class="card-grid">
+            <div class="grid gap-4" style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));">
                 <?php foreach ($announcements as $a): render_card($a); endforeach; ?>
             </div>
         </section>

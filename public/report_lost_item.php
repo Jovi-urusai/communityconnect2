@@ -55,62 +55,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Report a Lost Item — CommunityConnect</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body>
+<body class="resident-theme min-h-screen">
 
 <?php include __DIR__ . '/includes/header.php'; ?>
 
-<main class="container" style="max-width: 560px; padding-top: 24px;">
-    <p><a href="lost_found.php">&larr; Back to Lost Item</a></p>
-    <h1 style="margin-bottom: 4px;">Report a Lost Item</h1>
-    <p style="color: var(--text-muted); margin-top:0;">Lost something around the barangay? Post it here so other residents can recognize it and let you know.</p>
+<div class="flex flex-col lg:flex-row items-start gap-0 max-w-[1180px] mx-auto">
+    <?php include __DIR__ . '/includes/sidebar.php'; ?>
+    <main class="flex-1 min-w-0 px-5 pt-5 pb-5">
+        <p><a href="lost_found.php" class="text-amber-400 hover:text-amber-300">&larr; Back to Lost Item</a></p>
+        <h1 class="mb-1 text-2xl font-bold text-[var(--text)]">Report a Lost Item</h1>
+        <p class="mt-0 mb-4 text-sm text-[var(--text-muted)]">Lost something around the barangay? Post it here so other residents can recognize it and let you know.</p>
 
-    <?php if ($success): ?>
-        <div class="panel" style="padding: 24px;">
-            <p style="margin:0; color: var(--success); font-weight:600;">Your lost item report has been posted successfully.</p>
-            <p style="color: var(--text-muted); font-size: 13.5px; margin: 10px 0 0;">
-                It's now visible to everyone on the <a href="lost_found.php">Lost Item</a> page, under the "Lost Items" tab.
-            </p>
-        </div>
-    <?php else: ?>
-        <?php if ($errors): ?>
-            <div class="form-error"><?= implode('<br>', array_map('e', $errors)) ?></div>
+        <?php if ($success): ?>
+            <div class="bg-[var(--surface)] backdrop-blur-md border border-[var(--border)] p-8 rounded-2xl shadow-2xl max-w-2xl mx-auto">
+                <p class="m-0 text-emerald-400 font-semibold">Your lost item report has been posted successfully.</p>
+                <p class="text-[var(--text-muted)] text-sm mt-2.5 mb-0">
+                    It's now visible to everyone on the <a href="lost_found.php" class="text-amber-400 hover:text-amber-300">Lost Item</a> page, under the "Lost Items" tab.
+                </p>
+            </div>
+        <?php else: ?>
+            <?php if ($errors): ?>
+                <div class="max-w-2xl mx-auto mb-4 rounded-lg border border-red-500 bg-red-500/10 text-red-400 text-sm px-3 py-2"><?= implode('<br>', array_map('e', $errors)) ?></div>
+            <?php endif; ?>
+            <form method="post" class="bg-[var(--surface)] backdrop-blur-md border border-[var(--border)] p-8 rounded-2xl shadow-2xl max-w-2xl mx-auto space-y-4" enctype="multipart/form-data">
+                <div>
+                    <label class="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">Reporting As</label>
+                    <p class="m-0 font-semibold text-[var(--text)]"><?= e($resident['full_name']) ?> <span class="text-[var(--text-muted)] font-normal">(<?= e($resident['email']) ?>)</span></p>
+                </div>
+                <div>
+                    <label for="item_name" class="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">Item Name</label>
+                    <input type="text" id="item_name" name="item_name" required placeholder="e.g. Black umbrella" value="<?= e($_POST['item_name'] ?? '') ?>"
+                        class="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3.5 py-2.5 text-sm text-[var(--text)] placeholder-[var(--text-faint)] outline-none focus:border-amber-500 transition-colors">
+                </div>
+                <div>
+                    <label for="description" class="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">Description</label>
+                    <textarea id="description" name="description" required placeholder="Describe the item, or where you last saw it if you don't have a photo of the item itself."
+                        class="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3.5 py-2.5 text-sm text-[var(--text)] placeholder-[var(--text-faint)] outline-none focus:border-amber-500 transition-colors min-h-[90px]"><?= e($_POST['description'] ?? '') ?></textarea>
+                </div>
+                <div>
+                    <label for="date_lost" class="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">Date Lost</label>
+                    <input type="date" id="date_lost" name="date_lost" required value="<?= e($_POST['date_lost'] ?? date('Y-m-d')) ?>"
+                        class="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3.5 py-2.5 text-sm text-[var(--text)] outline-none focus:border-amber-500 transition-colors">
+                </div>
+                <div>
+                    <label for="location_lost" class="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">Location Lost</label>
+                    <input type="text" id="location_lost" name="location_lost" required placeholder="e.g. Near the covered court, Purok 2" value="<?= e($_POST['location_lost'] ?? '') ?>"
+                        class="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3.5 py-2.5 text-sm text-[var(--text)] placeholder-[var(--text-faint)] outline-none focus:border-amber-500 transition-colors">
+                </div>
+                <div>
+                    <label for="contact_info" class="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">Contact Info (optional)</label>
+                    <input type="text" id="contact_info" name="contact_info" placeholder="Phone number, Facebook name, etc. — so a finder can reach you" value="<?= e($_POST['contact_info'] ?? $resident['contact_number'] ?? '') ?>"
+                        class="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg px-3.5 py-2.5 text-sm text-[var(--text)] placeholder-[var(--text-faint)] outline-none focus:border-amber-500 transition-colors">
+                    <p class="field-hint">Optional. Only share what you're comfortable posting publicly.</p>
+                </div>
+                <div>
+                    <label for="photo" class="block text-xs font-semibold text-[var(--text-muted)] mb-1.5">Photos <span class="text-red-400">*</span></label>
+                    <input type="file" id="photo" name="photos[]" multiple accept="image/jpeg,image/png,image/gif,image/webp" data-multi-photo data-preview-target="lostItemPhotoPreview" data-max-files="6"
+                        class="w-full bg-[var(--bg-elevated)] border border-[var(--border)] rounded-lg text-sm text-[var(--text)] cursor-pointer file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:bg-amber-500 file:text-slate-950 file:font-semibold file:cursor-pointer">
+                    <p class="field-hint">Required — a photo of the item, or of where you last saw it. Up to 6 photos. JPG, PNG, GIF, or WEBP. Max 5MB each.</p>
+                    <div id="lostItemPhotoPreview" class="multi-photo-preview"></div>
+                </div>
+                <button type="submit" class="w-full inline-flex items-center justify-center gap-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl shadow-md transition-all">Post Lost Item</button>
+            </form>
         <?php endif; ?>
-        <form method="post" class="panel" style="padding: 20px;" enctype="multipart/form-data">
-            <div class="field">
-                <label>Reporting As</label>
-                <p style="margin:0; font-weight:600;"><?= e($resident['full_name']) ?> <span style="color:var(--text-muted); font-weight:400;">(<?= e($resident['email']) ?>)</span></p>
-            </div>
-            <div class="field">
-                <label for="item_name">Item Name</label>
-                <input type="text" id="item_name" name="item_name" required placeholder="e.g. Black umbrella" value="<?= e($_POST['item_name'] ?? '') ?>">
-            </div>
-            <div class="field">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" required style="min-height:90px;" placeholder="Describe the item, or where you last saw it if you don't have a photo of the item itself."><?= e($_POST['description'] ?? '') ?></textarea>
-            </div>
-            <div class="field">
-                <label for="date_lost">Date Lost</label>
-                <input type="date" id="date_lost" name="date_lost" required value="<?= e($_POST['date_lost'] ?? date('Y-m-d')) ?>">
-            </div>
-            <div class="field">
-                <label for="location_lost">Location Lost</label>
-                <input type="text" id="location_lost" name="location_lost" required placeholder="e.g. Near the covered court, Purok 2" value="<?= e($_POST['location_lost'] ?? '') ?>">
-            </div>
-            <div class="field">
-                <label for="contact_info">Contact Info (optional)</label>
-                <input type="text" id="contact_info" name="contact_info" placeholder="Phone number, Facebook name, etc. — so a finder can reach you" value="<?= e($_POST['contact_info'] ?? $resident['contact_number'] ?? '') ?>">
-                <p class="field-hint">Optional. Only share what you're comfortable posting publicly.</p>
-            </div>
-            <div class="field">
-                <label for="photo">Photos <span style="color:var(--danger);">*</span></label>
-                <input type="file" id="photo" name="photos[]" multiple accept="image/jpeg,image/png,image/gif,image/webp" data-multi-photo data-preview-target="lostItemPhotoPreview" data-max-files="6">
-                <p class="field-hint">Required — a photo of the item, or of where you last saw it. Up to 6 photos. JPG, PNG, GIF, or WEBP. Max 5MB each.</p>
-                <div id="lostItemPhotoPreview" class="multi-photo-preview"></div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-block">Post Lost Item</button>
-        </form>
-    <?php endif; ?>
-</main>
+    </main>
+</div>
 
 <?php include __DIR__ . '/includes/login_modal.php'; ?>
 <?php include __DIR__ . '/includes/footer.php'; ?>

@@ -6,7 +6,7 @@
    =========================================================== */
 
 :root {
-    --bg: #2b0a10;
+    --bg: #0b1120;
     --bg-elevated: #161d2c;
     --surface: #1b2334;
     --surface-hover: #212b40;
@@ -772,6 +772,26 @@ a:hover { color: var(--accent-hover); }
 
 .urgent-banner.severity-yellow {
     border-left-color: var(--accent-orange);
+}
+
+html[data-theme="light"] .resident-theme .urgent-banner.severity-yellow {
+    background: #fffbeb;
+    border-color: #fde68a;
+}
+
+html[data-theme="light"] .resident-theme .urgent-banner.severity-yellow strong,
+html[data-theme="light"] .resident-theme .urgent-banner.severity-yellow p {
+    color: #451a03;
+}
+
+html[data-theme="light"] .resident-theme .urgent-banner.severity-red {
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+
+html[data-theme="light"] .resident-theme .urgent-banner.severity-red strong,
+html[data-theme="light"] .resident-theme .urgent-banner.severity-red p {
+    color: #450a0a;
 }
 
 .urgent-banner.severity-red .urgent-icon {
@@ -2085,4 +2105,102 @@ table.data-table {
         width: calc(100vw - 32px);
     }
     .chatbot-toggle { right: 16px; bottom: 16px; }
+}
+
+/* ===========================================================
+   Resident dashboard pages — dark slate + amber glassmorphism,
+   with a soft-light counterpart for the theme toggle.
+   Scoped to body.resident-theme (index/category/community_feed/
+   lost_found/resolved_reports/track_request) so the admin panel
+   — which has its own independent light/dark toggle sharing this
+   same :root dark palette — is never affected by this reskin.
+   =========================================================== */
+html:not([data-theme="light"]) .resident-theme {
+    --bg: #020617;
+    --bg-elevated: #0f172a;
+    --surface: rgba(15, 23, 42, 0.7);
+    --surface-hover: rgba(30, 41, 59, 0.8);
+    --surface-strong: rgba(15, 23, 42, 0.9);
+    --border: #1e293b;
+    --text: #ffffff;
+    --text-muted: #94a3b8;
+    --text-faint: #64748b;
+    --accent: #f59e0b;
+    --accent-hover: #fbbf24;
+    --accent-text: #1a1200;
+    --accent-rgb: 245, 158, 11;
+}
+
+html[data-theme="light"] .resident-theme {
+    --bg: #f8fafc;
+    --bg-elevated: #ffffff;
+    --surface: rgba(255, 255, 255, 0.85);
+    --surface-hover: #f1f5f9;
+    --surface-strong: rgba(255, 255, 255, 0.85);
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-muted: #475569;
+    --text-faint: #64748b;
+    --accent: #d99a1f;
+    --accent-hover: #c78a15;
+    --accent-text: #1a1200;
+    --accent-rgb: 217, 154, 31;
+}
+
+.resident-theme {
+    background-color: var(--bg) !important;
+    color: var(--text) !important;
+    min-height: 100vh;
+}
+
+html:not([data-theme="light"]):has(body.resident-theme) {
+    background-color: #020617;
+}
+
+html[data-theme="light"]:has(body.resident-theme) {
+    background-color: #f8fafc;
+}
+
+.resident-theme .site-header {
+    background: var(--surface-strong);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+}
+
+.resident-theme .public-sidebar {
+    background: var(--surface-strong);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-right: 1px solid var(--border);
+}
+
+.resident-theme .public-nav a.active {
+    background: rgba(var(--accent-rgb), 0.12);
+    border: 1px solid rgba(var(--accent-rgb), 0.4);
+    color: var(--accent);
+    box-shadow: 0 0 16px rgba(var(--accent-rgb), 0.28);
+}
+
+@media (max-width: 800px) {
+    .resident-theme .public-sidebar { border-right: none; border-bottom: 1px solid var(--border); }
+}
+
+.resident-theme .panel,
+.resident-theme .card,
+.resident-theme .gallery-card,
+.resident-theme .post-card {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.resident-theme .card:hover,
+.resident-theme .gallery-card:hover {
+    border-color: rgba(var(--accent-rgb), 0.5);
+}
+
+.resident-theme .card-image,
+.resident-theme .gallery-card img {
+    aspect-ratio: 16 / 9;
+    height: auto;
 }
